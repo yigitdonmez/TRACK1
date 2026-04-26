@@ -214,7 +214,11 @@ public class GameHub : Hub {
             await BroadcastLeaderboard(roomCode, player.Name, false); 
 
             if (room.WrongGuessersThisRound.Count >= room.Players.Count) {
+                
+                await Task.Delay(1500); 
+                
                 room.WrongGuessersThisRound.Clear();
+                
                 await Clients.Group(roomCode).SendAsync("AllGuessedWrong");
             }
         }
