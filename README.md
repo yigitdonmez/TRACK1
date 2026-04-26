@@ -77,7 +77,7 @@ Aniden kopan bağlantıların oyunu dondurmasını engellemek için `OnDisconnec
 ### Step-by-Step / Adım Adım
 
 **1. Clone the repository / Repoyu indirin:**
-    ```git clone [github.com/yigitdonmez/TRACK1.git](https://github.com/yigitdonmez/TRACK1.git)```
+    ```git clone github.com/yigitdonmez/TRACK1.git```
 
 **2. Go to project folder / Proje klasörüne girin:**
     ```cd TRACK1```
