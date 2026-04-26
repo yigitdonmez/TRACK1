@@ -5,18 +5,16 @@
 [![SignalR](https://img.shields.io/badge/SignalR-Real--time-orange?logo=signalr&logoColor=white)](#)
 [![Vanilla JS](https://img.shields.io/badge/Frontend-Vanilla_JS-F7DF1E?logo=javascript&logoColor=black)](#)
 
-[🇬🇧 English Description](#english-description) | [🇹🇷 Türkçe Açıklama](#türkçe-açıklama)
-
 ---
 
-## 🎵 About The Game (Elevator Pitch)
+## 🎵 About The Game
 **TRACK1** is a fast-paced, real-time "Party Game" where you test your music knowledge against your friends. Imagine the excitement of a live game show, right in your browser. 
 
 Players join a live lobby using a unique code, collaboratively vote on a music category (e.g., "Rock" or "The Weeknd"), and race against the clock to guess the playing song. With explosive visual feedback for winning streaks, a dynamic scoring system that rewards speed, and a flawless bilingual (EN/TR) interface, TRACK1 is designed to be highly competitive and incredibly fun. 
 
 ---
 
-## 🎵 Oyun Hakkında (Asansör Sunumu)
+## 🎵 Oyun Hakkında
 **TRACK1**, arkadaşlarınızla bir araya gelip müzik bilginizi yarıştırdığınız, yüksek tempolu ve gerçek zamanlı bir "Party Game"dir. Bir bilgi yarışmasının canlı heyecanını doğrudan tarayıcınıza taşır.
 
 Oyuncular benzersiz bir kodla canlı lobiye katılır, ortaklaşa bir müzik kategorisi (örn. "Rock" veya "Manga") belirler ve çalan şarkıyı en hızlı tahmin eden olmak için zamana karşı yarışırlar. Üst üste doğru bilenleri ödüllendiren "Alev" (Streak) sistemi, hızı ödüllendiren dinamik puanlaması ve kusursuz çift dilli (TR/EN) arayüzü ile TRACK1, son derece rekabetçi ve eğlenceli olacak şekilde tasarlanmıştır.
@@ -75,14 +73,14 @@ Aniden kopan bağlantıların oyunu dondurmasını engellemek için `OnDisconnec
 
 ### Step-by-Step / Adım Adım
 
-**A. Clone the repository / Repoyu indirin:**
-    git clone [github.com/yigitdonmez/TRACK1.git](https://github.com/yigitdonmez/TRACK1.git)
+**1. Clone the repository / Repoyu indirin:**
+    '''git clone [github.com/yigitdonmez/TRACK1.git](https://github.com/yigitdonmez/TRACK1.git)'''
 
-**B. Go to project folder / Proje klasörüne girin:**
-    cd TRACK1
+**2. Go to project folder / Proje klasörüne girin:**
+    '''cd TRACK1'''
 
-**C. Restore & Run / Çalıştırın:**
-    dotnet run
+**3. Restore & Run / Çalıştırın:**
+    '''dotnet run'''
 
 **D. Play / Oynayın:**
 Open your browser and go to localhost address seen on your terminal. You can test this by opening two tabs side-by-side to invite your friends. / Tarayıcınızı açın ve terminalinizde görünen localhost adresine gidin. Arkadaşlarınızı davet etmek için yan yana iki sekme açarak test edebilirsiniz.
@@ -92,6 +90,8 @@ Open your browser and go to localhost address seen on your terminal. You can tes
 ## 📅 Roadmap / Yol Haritası
 - [ ] **Spotify Integration:** 30 saniyelik önizlemelerden tam kütüphane erişimine geçiş.
 - [ ] **Global Leaderboard:** Redis kullanarak dünya çapında kalıcı skor tablosu.
+- [ ] **Cloud Deployment (Canlıya Alma):** Projeyi Docker container yapısına geçirip, Azure App Service veya AWS üzerinden global erişime açmak.
+- [ ] **CI/CD Pipeline Kurulumu:** GitHub Actions kullanarak, koda her yeni özellik eklendiğinde sunucunun otomatik güncellenmesini sağlamak.
 - [ ] **Lobby Settings:** Oyuncuların kendi lobi ayarlarını değiştirebileceği alan
 - [ ] **Custom Rooms:** Şifreli ve özel lobi kurma desteği.
 - [ ] **Language Support:** Dil seçenekleri eklenmesi.
