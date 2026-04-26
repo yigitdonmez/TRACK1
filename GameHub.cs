@@ -66,10 +66,8 @@ public class GameHub : Hub {
             await Groups.AddToGroupAsync(Context.ConnectionId, roomCode);
             await Clients.Caller.SendAsync("RoomJoined", roomCode, false); 
             await BroadcastLeaderboard(roomCode);
-            // YENİ: Türkçe metin yerine olay yolluyoruz
             await Clients.Group(roomCode).SendAsync("PlayerJoinedEvent", playerName);
         } else {
-            // YENİ: Dil anahtarı (key) yolluyoruz
             await Clients.Caller.SendAsync("AnswerResult", false, "err_room_not_found");
         }
     }
@@ -87,7 +85,6 @@ public class GameHub : Hub {
         int requiredTracks = room.Players.Count * 10;
         
         if (trackCount < requiredTracks) {
-            // YENİ: Türkçe mesaj yerine verileri yolluyoruz
             await Clients.Caller.SendAsync("ErrorNotEnoughTracks", value, trackCount, requiredTracks);
             return; 
         }
@@ -155,7 +152,6 @@ public class GameHub : Hub {
             room.QuestionStartTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(); 
             await Clients.Group(room.RoomCode).SendAsync("NewQuestionReceived", question);
         } else {
-            // YENİ: Şarkı bittiğini belirten olay
             await Clients.Group(room.RoomCode).SendAsync("OutOfSongsEvent");
             await Task.Delay(3000);
             ResetLobby(room);
@@ -192,7 +188,6 @@ public class GameHub : Hub {
 
             player.Score += points;
             
-            // YENİ: String mesaj yerine spesifik değerleri (puan, hız durumu) iletiyoruz
             await Clients.Group(roomCode).SendAsync("PlayerGuessedEvent", player.Name, isFast, points);
             await BroadcastLeaderboard(roomCode, player.Name, true); 
 
@@ -214,7 +209,6 @@ public class GameHub : Hub {
                 player.Score--; player.Streak = 0; 
             }
 
-            // YENİ: Hata anahtarı yolluyoruz
             await Clients.Caller.SendAsync("AnswerResult", false, "err_wrong_answer");
             await Clients.OthersInGroup(roomCode).SendAsync("PlayerGuessedWrongEvent", player.Name);
             await BroadcastLeaderboard(roomCode, player.Name, false); 
@@ -244,8 +238,10 @@ public class GameHub : Hub {
 
     public override async Task OnDisconnectedAsync(Exception? exception) {
         if (_userRooms.TryGetValue(Context.ConnectionId, out var roomCode) && _rooms.TryGetValue(roomCode, out var room)) {
+            
             room.Players.TryRemove(Context.ConnectionId, out _);
             room.Votes.TryRemove(Context.ConnectionId, out _);
+            room.WrongGuessersThisRound.Remove(Context.ConnectionId);
             _userRooms.TryRemove(Context.ConnectionId, out _);
             
             if (room.Players.Count == 0) {
@@ -255,7 +251,13 @@ public class GameHub : Hub {
                     room.HostConnectionId = room.Players.Keys.First();
                     await Clients.Client(room.HostConnectionId).SendAsync("YouAreNowHost");
                 }
+                
                 await BroadcastLeaderboard(roomCode);
+
+                if (room.IsPlaying && room.WrongGuessersThisRound.Count >= room.Players.Count) {
+                    room.WrongGuessersThisRound.Clear();
+                    await Clients.Group(roomCode).SendAsync("AllGuessedWrong");
+                }
             }
         }
         await base.OnDisconnectedAsync(exception);
