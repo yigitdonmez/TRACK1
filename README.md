@@ -24,7 +24,7 @@ Oyuncular benzersiz bir kodla canlı lobiye katılır, ortaklaşa bir müzik kat
 ---
 
 ## 🎥 Demo / Gameplay
-> ![TRACK1 Oynanış Videosu](./record.mp4)
+> <video src="record.mp4" width="100%" autoplay loop muted playsinline></video>
 
 ---
 
