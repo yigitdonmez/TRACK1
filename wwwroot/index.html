@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>Müzik Quiz - Party Modu</title>
+    <title>TRACK1</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
     <style>
         body { font-family: 'Segoe UI', sans-serif; background-color: #191414; color: white; display: flex; justify-content: center; padding-top: 40px; margin: 0; min-height: 100vh; overflow-x: hidden;}
@@ -76,73 +76,83 @@
         audio { margin-top: 15px; width: 100%; outline: none; }
         .section { display: none; }
         .active-section { display: block; }
+
+        /* --- YENİ: Dil Seçici Butonları --- */
+        .lang-selector { position: absolute; top: 15px; right: 20px; z-index: 10; display: flex; gap: 5px; }
+        .lang-btn { background: rgba(30, 30, 30, 0.8); border: 1px solid #555; color: #b3b3b3; padding: 5px 10px; border-radius: 15px; cursor: pointer; font-size: 12px; transition: 0.3s; }
+        .lang-btn.active { background: #1ed760; color: #191414; border-color: #1ed760; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <div id="dynamic-bg"></div>
 
+    <div class="lang-selector">
+        <button class="lang-btn active" onclick="setLanguage('tr')" id="btnLangTR">TR</button>
+        <button class="lang-btn" onclick="setLanguage('en')" id="btnLangEN">EN</button>
+    </div>
+
     <div id="mainWrapper" class="main-wrapper">
         <div id="sidebarMenu" class="sidebar">
-            <h3>🏆 Sıralama</h3>
+            <h3 data-i18n="lbl_ranking">🏆 Sıralama</h3>
             <div id="playerListContent">
-                <div style="text-align:center; color:#b3b3b3; font-size:14px; margin-top:20px;">Önce Odaya Katıl</div>
+                <div style="text-align:center; color:#b3b3b3; font-size:14px; margin-top:20px;" data-i18n="lbl_join_first">Önce Odaya Katıl</div>
             </div>
             <p id="readyStatusText" style="text-align:center; font-size: 13px; color: #1ed760; margin-top: 15px;"></p>
         </div>
 
         <div class="game-panel">
-            <h2 style="font-size: 28px;">🎵 Party Müzik Quiz</h2>
+            <h2 style="font-size: 28px;" data-i18n="title_main">TRACK1</h2>
             <div id="infoBox"></div>
 
             <div id="welcomeScreen" class="section active-section">
-                <p style="color:#b3b3b3; margin-bottom: 30px;">Arkadaşlarınla rekabet et. En hızlı olan kazanır!</p>
+                <p style="color:#b3b3b3; margin-bottom: 30px;" data-i18n="subtitle">Arkadaşlarınla rekabet et. En hızlı olan kazanır!</p>
                 <div style="display:flex; justify-content: center; gap: 20px;">
-                    <button class="btn" style="padding: 15px 30px;" onclick="showScreen('createScreen')">Oda Kur</button>
-                    <button class="btn btn-outline" style="padding: 15px 30px;" onclick="showScreen('joinScreen')">Odaya Katıl</button>
+                    <button class="btn" style="padding: 15px 30px;" onclick="showScreen('createScreen')" data-i18n="btn_create_room">Oda Kur</button>
+                    <button class="btn btn-outline" style="padding: 15px 30px;" onclick="showScreen('joinScreen')" data-i18n="btn_join_room">Odaya Katıl</button>
                 </div>
             </div>
 
             <div id="createScreen" class="section">
-                <h3>Oda Kur</h3>
-                <input type="text" id="createNameInput" placeholder="Oyuncu Adınız..." style="width: 70%;"><br>
-                <button class="btn" onclick="odaKur()">Kur ve Lobiye Geç</button><br>
-                <button class="btn btn-outline" style="margin-top:15px; border-color:#555; color:#b3b3b3;" onclick="showScreen('welcomeScreen')">Geri</button>
+                <h3 data-i18n="create_title">Oda Kur</h3>
+                <input type="text" id="createNameInput" data-i18n-placeholder="placeholder_name" placeholder="Oyuncu Adınız..." style="width: 70%;"><br>
+                <button class="btn" onclick="odaKur()" data-i18n="btn_create_lobby">Kur ve Lobiye Geç</button><br>
+                <button class="btn btn-outline" style="margin-top:15px; border-color:#555; color:#b3b3b3;" onclick="showScreen('welcomeScreen')" data-i18n="btn_back">Geri</button>
             </div>
 
             <div id="joinScreen" class="section">
-                <h3>Odaya Katıl</h3>
-                <input type="text" id="joinRoomInput" placeholder="Oda Kodu (örn: A7X9P)" style="width: 70%; text-transform: uppercase;"><br>
-                <input type="text" id="joinNameInput" placeholder="Oyuncu Adınız..." style="width: 70%;"><br>
-                <button class="btn" onclick="odayaKatil()">Bağlan</button><br>
-                <button class="btn btn-outline" style="margin-top:15px; border-color:#555; color:#b3b3b3;" onclick="showScreen('welcomeScreen')">Geri</button>
+                <h3 data-i18n="join_title">Odaya Katıl</h3>
+                <input type="text" id="joinRoomInput" data-i18n-placeholder="placeholder_roomcode" placeholder="Oda Kodu (örn: A7X9P)" style="width: 70%; text-transform: uppercase;"><br>
+                <input type="text" id="joinNameInput" data-i18n-placeholder="placeholder_name" placeholder="Oyuncu Adınız..." style="width: 70%;"><br>
+                <button class="btn" onclick="odayaKatil()" data-i18n="btn_connect">Bağlan</button><br>
+                <button class="btn btn-outline" style="margin-top:15px; border-color:#555; color:#b3b3b3;" onclick="showScreen('welcomeScreen')" data-i18n="btn_back">Geri</button>
             </div>
 
             <div id="lobbyArea" class="section">
                 <div class="room-code-box">
-                    <span style="font-size: 14px; color:#b3b3b3;">Oda Kodu:</span><br>
+                    <span style="font-size: 14px; color:#b3b3b3;" data-i18n="lbl_room_code">Oda Kodu:</span><br>
                     <span id="displayRoomCode" style="font-size: 28px; font-weight: bold; letter-spacing: 3px; color: #1ed760; display:inline-block; margin-bottom: 10px;">•••••</span><br>
-                    <button class="btn btn-outline" style="padding: 5px 10px; font-size: 12px;" onclick="toggleRoomCode()">👁️ Göster/Gizle</button>
-                    <button class="btn btn-outline" style="padding: 5px 10px; font-size: 12px;" onclick="davetLinkiKopyala()">📋 Link Kopyala</button>
+                    <button class="btn btn-outline" style="padding: 5px 10px; font-size: 12px;" onclick="toggleRoomCode()" data-i18n="btn_show_hide">👁️ Göster/Gizle</button>
+                    <button class="btn btn-outline" style="padding: 5px 10px; font-size: 12px;" onclick="davetLinkiKopyala()" data-i18n="btn_copy_link">📋 Link Kopyala</button>
                 </div>
 
                 <div class="mode-selector">
                     <input type="radio" id="modeArtist" name="gameMode" value="Artist" checked onchange="updateInputStyle()">
-                    <label for="modeArtist" class="mode-label">Sanatçı</label>
+                    <label for="modeArtist" class="mode-label" data-i18n="lbl_artist">Sanatçı</label>
                     <input type="radio" id="modeGenre" name="gameMode" value="Genre" onchange="updateInputStyle()">
-                    <label for="modeGenre" class="mode-label">Müzik Türü</label>
+                    <label for="modeGenre" class="mode-label" data-i18n="lbl_genre">Müzik Türü</label>
                     <div class="mode-slider"></div>
                 </div>
                 
-                <input type="text" id="valueInput" placeholder="Sanatçı adı (örn: Motive)">
-                <button class="btn btn-outline" style="display:block; margin: 0 auto 15px auto;" onclick="kategoriOner()">Kategori Öner</button>
+                <input type="text" id="valueInput" data-i18n-placeholder="placeholder_artist" placeholder="Sanatçı adı (örn: Motive)">
+                <button class="btn btn-outline" style="display:block; margin: 0 auto 15px auto;" onclick="kategoriOner()" data-i18n="btn_suggest">Kategori Öner</button>
                 
-                <button id="hostStartBtn" class="btn" style="background-color: #f57c00; width: 100%; display:none; padding: 15px; font-size: 18px;" onclick="oyunuBaslat()">🎮 Oyunu Başlat</button>
+                <button id="hostStartBtn" class="btn" style="background-color: #f57c00; width: 100%; display:none; padding: 15px; font-size: 18px;" onclick="oyunuBaslat()" data-i18n="btn_start_game">🎮 Oyunu Başlat</button>
             </div>
 
             <div id="votingArea" class="section">
-                <h3 style="color: #f57c00;">Birden fazla kategori önerildi!</h3>
-                <p>Oynamak istediğiniz kategoriye oy verin:</p>
+                <h3 style="color: #f57c00;" data-i18n="voting_title">Birden fazla kategori önerildi!</h3>
+                <p data-i18n="voting_desc">Oynamak istediğiniz kategoriye oy verin:</p>
                 <div id="voteOptions"></div>
             </div>
 
@@ -154,14 +164,14 @@
             </div>
 
             <div id="victoryArea" class="section">
-                <h1 style="color: #1ed760; font-size: 40px; margin-bottom: 0;">🏆 ŞAMPİYON 🏆</h1>
-                <h2 id="winnerNameDisplay" style="font-size: 50px; color: white; margin-top: 10px; text-shadow: 0px 0px 20px #1ed760;">YİĞİT</h2>
-                <div class="victory-stat">⏱️ Toplam Oyun Süresi: <strong id="totalTimeDisplay" style="color:white;">0:00</strong></div>
+                <h1 style="color: #1ed760; font-size: 40px; margin-bottom: 0;" data-i18n="lbl_champion">🏆 ŞAMPİYON 🏆</h1>
+                <h2 id="winnerNameDisplay" style="font-size: 50px; color: white; margin-top: 10px; text-shadow: 0px 0px 20px #1ed760;">-</h2>
+                <div class="victory-stat"><span data-i18n="lbl_total_time">⏱️ Toplam Oyun Süresi:</span> <strong id="totalTimeDisplay" style="color:white;">0:00</strong></div>
                 <div class="victory-stat" style="border: 1px solid #f57c00;">
-                    ⚡ <span style="color: #f57c00;">EN HIZLI VURUŞ:</span> <strong id="fastestTimeDisplay" style="color:white;">0.0s</strong><br>
+                    <span data-i18n="lbl_fastest_hit" style="color: #f57c00;">⚡ EN HIZLI VURUŞ:</span> <strong id="fastestTimeDisplay" style="color:white;">0.0s</strong><br>
                     <div id="fastestTrackDisplay" class="fastest-track-info">Şarkı Adı</div>
                 </div>
-                <p style="color: #b3b3b3; margin-top: 30px; font-style: italic;">Oyun lobiye dönüyor...</p>
+                <p style="color: #b3b3b3; margin-top: 30px; font-style: italic;" data-i18n="lbl_returning">Oyun lobiye dönüyor...</p>
             </div>
         </div>
     </div>
@@ -169,6 +179,137 @@
     <audio id="victoryPlayer" style="display:none;"></audio>
 
     <script>
+        const translations = {
+            "tr": {
+                "title_main": "TRACK1",
+                "subtitle": "Arkadaşlarınla rekabet et. En hızlı olan kazanır!",
+                "btn_create_room": "Oda Kur",
+                "btn_join_room": "Odaya Katıl",
+                "create_title": "Oda Kur",
+                "placeholder_name": "Oyuncu Adınız...",
+                "btn_create_lobby": "Kur ve Lobiye Geç",
+                "btn_back": "Geri",
+                "join_title": "Odaya Katıl",
+                "placeholder_roomcode": "Oda Kodu (örn: A7X9P)",
+                "btn_connect": "Bağlan",
+                "lbl_room_code": "Oda Kodu:",
+                "btn_show_hide": "👁️ Göster/Gizle",
+                "btn_copy_link": "📋 Link Kopyala",
+                "lbl_artist": "Sanatçı",
+                "lbl_genre": "Müzik Türü",
+                "placeholder_artist": "Sanatçı adı (örn: Motive)",
+                "placeholder_genre": "Müzik türü (örn: Rap)",
+                "btn_suggest": "Kategori Öner",
+                "btn_start_game": "🎮 Oyunu Başlat",
+                "lbl_ranking": "🏆 Sıralama",
+                "lbl_join_first": "Önce Odaya Katıl",
+                "voting_title": "Birden fazla kategori önerildi!",
+                "voting_desc": "Oynamak istediğiniz kategoriye oy verin:",
+                "lbl_champion": "🏆 ŞAMPİYON 🏆",
+                "lbl_total_time": "⏱️ Toplam Oyun Süresi:",
+                "lbl_fastest_hit": "⚡ EN HIZLI VURUŞ:",
+                "lbl_returning": "Oyun lobiye dönüyor...",
+                "msg_enter_name": "Adınızı yazın!",
+                "msg_enter_name_code": "Adı ve Oda Kodunu girin!",
+                "msg_room_created": "Oda kuruldu!",
+                "msg_room_joined": "Odaya başarıyla katıldın.",
+                "msg_host_left": "Oda kurucusu ayrıldı. Yeni yönetici sensin!",
+                "msg_link_copied": "Davet linki kopyalandı!",
+                "msg_proposals_count": "{0} kategori önerisi yapıldı.",
+                "msg_voting_started": "Oylama başladı!",
+                "msg_vote_received": "Oyunuz alındı, diğerleri bekleniyor...",
+                "msg_winner_cat": "Kazanan kategori: {0}",
+                "msg_fast_answer": "Hızlı cevap ver, 2.5 saniyeden önce bilirsen x2 Puan!",
+                "msg_all_wrong": "Herkes yanlış bildi! Seçenekler tekrar açıldı.",
+                "msg_game_over": "Oyun bitti! Şampiyon kutlanıyor...",
+                "prompt_room_code": "Oda kodunu girin:",
+                "lbl_category": "Kategori: {0}",
+                "err_room_not_found": "Oda bulunamadı veya oyun başladı!",
+                "err_suggest_first": "Önce kategori önerin!",
+                "err_wrong_answer": "Yanlış cevap!",
+                "msg_player_joined": "odaya katıldı!",
+                "msg_wrong_guess": "yanlış bildi!",
+                "msg_fast_bonus": "(Hızlı Cevap!)",
+                "err_not_enough_tracks": "⚠️ HATA: '{0}' için depoda {1} şarkı var. (En az {2} şarkı lazım). Lütfen daha geniş bir kategori önerin!",
+                "msg_suggested": "yeni bir kategori önerdi."
+            },
+            "en": {
+                "title_main": "TRACK1",
+                "subtitle": "Compete with friends. The fastest wins!",
+                "btn_create_room": "Create Room",
+                "btn_join_room": "Join Room",
+                "create_title": "Create Room",
+                "placeholder_name": "Your Player Name...",
+                "btn_create_lobby": "Create & Go to Lobby",
+                "btn_back": "Back",
+                "join_title": "Join Room",
+                "placeholder_roomcode": "Room Code (e.g. A7X9P)",
+                "btn_connect": "Connect",
+                "lbl_room_code": "Room Code:",
+                "btn_show_hide": "👁️ Show/Hide",
+                "btn_copy_link": "📋 Copy Link",
+                "lbl_artist": "Artist",
+                "lbl_genre": "Genre",
+                "placeholder_artist": "Artist name (e.g. The Weeknd)",
+                "placeholder_genre": "Music genre (e.g. Pop)",
+                "btn_suggest": "Suggest Category",
+                "btn_start_game": "🎮 Start Game",
+                "lbl_ranking": "🏆 Leaderboard",
+                "lbl_join_first": "Join a room first",
+                "voting_title": "Multiple categories suggested!",
+                "voting_desc": "Vote for the category you want to play:",
+                "lbl_champion": "🏆 CHAMPION 🏆",
+                "lbl_total_time": "⏱️ Total Game Time:",
+                "lbl_fastest_hit": "⚡ FASTEST HIT:",
+                "lbl_returning": "Returning to lobby...",
+                "msg_enter_name": "Please enter your name!",
+                "msg_enter_name_code": "Enter Name and Room Code!",
+                "msg_room_created": "Room created!",
+                "msg_room_joined": "Successfully joined the room.",
+                "msg_host_left": "Host left. You are the new host!",
+                "msg_link_copied": "Invite link copied!",
+                "msg_proposals_count": "{0} category suggestions made.",
+                "msg_voting_started": "Voting started!",
+                "msg_vote_received": "Vote received, waiting for others...",
+                "msg_winner_cat": "Winning category: {0}",
+                "msg_fast_answer": "Answer fast, x2 Points if under 2.5 seconds!",
+                "msg_all_wrong": "Everyone guessed wrong! Options unlocked.",
+                "msg_game_over": "Game over! Celebrating the champion...",
+                "prompt_room_code": "Enter room code:",
+                "lbl_category": "Category: {0}",
+                "err_room_not_found": "Room not found or game already started!",
+                "err_suggest_first": "Suggest a category first!",
+                "err_wrong_answer": "Wrong answer!",
+                "msg_player_joined": "joined the room!",
+                "msg_wrong_guess": "guessed wrong!",
+                "msg_fast_bonus": "(Fast Bonus!)",
+                "err_not_enough_tracks": "⚠️ ERROR: Found {1} songs for '{0}'. (Need at least {2}). Please suggest a broader category!",
+                "msg_suggested": "suggested a new category."
+            }
+        };
+
+        let currentLanguage = "tr";
+
+        function setLanguage(lang) {
+            currentLanguage = lang;
+            
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang][key]) el.innerHTML = translations[lang][key];
+            });
+
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-i18n-placeholder');
+                if (translations[lang][key]) el.placeholder = translations[lang][key];
+            });
+
+            document.getElementById("btnLangTR").classList.remove("active");
+            document.getElementById("btnLangEN").classList.remove("active");
+            document.getElementById(lang === 'tr' ? "btnLangTR" : "btnLangEN").classList.add("active");
+
+            updateInputStyle();
+        }
+
         const connection = new signalR.HubConnectionBuilder().withUrl("/gamehub").withAutomaticReconnect().build();        
         const infoBox = document.getElementById("infoBox");
         const dynamicBg = document.getElementById("dynamic-bg");
@@ -182,6 +323,7 @@
         let isVictoryScreenActive = false;
 
         window.onload = () => {
+            setLanguage(currentLanguage);
             const urlParams = new URLSearchParams(window.location.search);
             const roomParam = urlParams.get('room');
             if(roomParam) {
@@ -210,24 +352,29 @@
         function davetLinkiKopyala() {
             const link = window.location.origin + window.location.pathname + "?room=" + currentRoomCode;
             navigator.clipboard.writeText(link);
-            showInfo("Davet linki kopyalandı!", true);
+            showInfo(translations[currentLanguage]["msg_link_copied"], true);
         }
 
         function updateInputStyle() {
-            const mode = document.querySelector('input[name="gameMode"]:checked').value;
-            document.getElementById("valueInput").placeholder = mode === "Artist" ? "Sanatçı adı (örn: Motive)" : "Müzik türü (örn: Rap)";
+            const modeElement = document.querySelector('input[name="gameMode"]:checked');
+            if(modeElement) {
+                const mode = modeElement.value;
+                document.getElementById("valueInput").placeholder = mode === "Artist" 
+                    ? translations[currentLanguage]["placeholder_artist"] 
+                    : translations[currentLanguage]["placeholder_genre"];
+            }
         }
 
         function odaKur() {
             const name = document.getElementById("createNameInput").value;
-            if(!name) return showInfo("Adınızı yazın!", true);
+            if(!name) return showInfo(translations[currentLanguage]["msg_enter_name"], true);
             connection.invoke("CreateRoom", name).catch(console.error);
         }
 
         function odayaKatil() {
             const name = document.getElementById("joinNameInput").value;
             const roomCode = document.getElementById("joinRoomInput").value;
-            if(!name || !roomCode) return showInfo("Adı ve Oda Kodunu girin!", true);
+            if(!name || !roomCode) return showInfo(translations[currentLanguage]["msg_enter_name_code"], true);
             connection.invoke("JoinRoom", roomCode, name).catch(console.error);
         }
 
@@ -239,15 +386,15 @@
             
             if (isHost) {
                 document.getElementById("hostStartBtn").style.display = "block";
-                showInfo("Oda kuruldu!");
+                showInfo(translations[currentLanguage]["msg_room_created"]);
             } else {
-                showInfo("Odaya başarıyla katıldın.");
+                showInfo(translations[currentLanguage]["msg_room_joined"]);
             }
         });
 
         connection.on("YouAreNowHost", () => {
             document.getElementById("hostStartBtn").style.display = "block";
-            showInfo("Oda kurucusu ayrıldı. Yeni yönetici sensin!", true);
+            showInfo(translations[currentLanguage]["msg_host_left"], true);
         });
 
         function kategoriOner() {
@@ -261,7 +408,7 @@
         function oyunuBaslat() { connection.invoke("StartGameByHost"); }
 
         connection.on("ProposalCountUpdated", (propCount, totalPlayers) => {
-            document.getElementById("readyStatusText").innerText = `${propCount} kategori önerisi yapıldı.`;
+            document.getElementById("readyStatusText").innerText = translations[currentLanguage]["msg_proposals_count"].replace("{0}", propCount);
         });
 
         connection.on("LeaderboardUpdated", (players, actionPlayerName, isCorrect) => {
@@ -291,29 +438,31 @@
 
         connection.on("StartVoting", (options) => {
             showScreen("votingArea");
-            showInfo("Oylama başladı!", true);
+            showInfo(translations[currentLanguage]["msg_voting_started"], true);
             const voteDiv = document.getElementById("voteOptions");
             voteDiv.innerHTML = "";
             options.forEach(opt => {
                 const b = document.createElement("button");
                 b.className = "option-btn";
-                b.innerText = `${opt.mode === "Artist" ? "Sanatçı" : "Tür"}: ${opt.value}`;
+                b.innerText = `${opt.mode === "Artist" ? translations[currentLanguage]["lbl_artist"] : translations[currentLanguage]["lbl_genre"]}: ${opt.value}`;
                 b.onclick = () => {
                     connection.invoke("SubmitVote", opt.value);
-                    voteDiv.innerHTML = "<p>Oyunuz alındı, diğerleri bekleniyor...</p>";
+                    voteDiv.innerHTML = `<p>${translations[currentLanguage]["msg_vote_received"]}</p>`;
                 };
                 voteDiv.appendChild(b);
             });
         });
 
-        connection.on("VotingFinished", (winner) => showInfo(`Kazanan kategori: ${winner}`, true));
+        connection.on("VotingFinished", (winner) => {
+            showInfo(translations[currentLanguage]["msg_winner_cat"].replace("{0}", winner), true);
+        });
 
         connection.on("GameStarting", (mode, value) => {
             sidebarMenu.classList.add("active");
             mainWrapper.classList.add("game-active");
             document.getElementById("readyStatusText").innerText = ""; 
             showScreen("gameArea");
-            document.getElementById("gameHeader").innerText = `Kategori: ${value}`;
+            document.getElementById("gameHeader").innerText = translations[currentLanguage]["lbl_category"].replace("{0}", value);
             
             secondsElapsed = 0;
             clearInterval(timerInterval);
@@ -327,7 +476,7 @@
         });
 
         connection.on("NewQuestionReceived", (question) => {
-            showInfo("Hızlı cevap ver, 2.5 saniyeden önce bilirsen x2 Puan!");
+            showInfo(translations[currentLanguage]["msg_fast_answer"]);
             document.getElementById("muzikCalar").src = question.audioUrl;
             document.getElementById("muzikCalar").play();
             if (question.coverUrl) dynamicBg.style.backgroundImage = `url('${question.coverUrl}')`;
@@ -343,6 +492,8 @@
             });
         });
 
+        // NOT: C#'tan gelen uyarılar (Örn: "Yiğit doğru bildi") hala C# tarafından dil ayarı olmadan gönderiliyorsa, 
+        // burada doğrudan ekrana basılacaktır. İleride C#'ı da olay tabanlı hale getirebilirsin.
         connection.on("GameInfo", msg => showInfo(msg));
 
         connection.on("AnswerResult", (isCorrect, msg) => {
@@ -351,7 +502,7 @@
         });
 
         connection.on("AllGuessedWrong", () => {
-            showInfo("Herkes yanlış bildi! Seçenekler tekrar açıldı.", true);
+            showInfo(translations[currentLanguage]["msg_all_wrong"], true);
             document.querySelectorAll(".option-btn").forEach(b => b.disabled = false);
         });
 
@@ -371,7 +522,7 @@
             if (fastestCoverUrl) dynamicBg.style.backgroundImage = `url('${fastestCoverUrl}')`;
 
             showScreen("victoryArea");
-            showInfo("Oyun bitti! Şampiyon kutlanıyor...", true);
+            showInfo(translations[currentLanguage]["msg_game_over"], true);
 
             if (fastestTrackUrl) {
                 const victoryPlayer = document.getElementById("victoryPlayer");
@@ -404,6 +555,42 @@
             } else {
                 setTimeout(doReset, 2000);
             }
+        });
+
+        connection.on("PlayerJoinedEvent", (playerName) => {
+            showInfo(`👋 ${playerName} ${translations[currentLanguage]["msg_player_joined"]}`);
+        });
+
+        connection.on("CategorySuggestedEvent", (playerName) => {
+            showInfo(`🎵 ${playerName} ${translations[currentLanguage]["msg_suggested"]}`);
+        });
+
+        connection.on("PlayerGuessedEvent", (playerName, isFast, points) => {
+            const fastMsg = isFast ? translations[currentLanguage]["msg_fast_bonus"] : "";
+            const guessedMsg = translations[currentLanguage]["msg_guessed"];
+            showInfo(`✅ ${playerName} ${guessedMsg} ${fastMsg} (+${points})`, false);
+        });
+
+        connection.on("PlayerGuessedWrongEvent", (playerName) => {
+            showInfo(`❌ ${playerName} ${translations[currentLanguage]["msg_wrong_guess"]}`, true);
+        });
+
+        connection.on("ErrorNotEnoughTracks", (value, trackCount, requiredTracks) => {
+            let errMsg = translations[currentLanguage]["err_not_enough_tracks"];
+            errMsg = errMsg.replace("{0}", value).replace("{1}", trackCount).replace("{2}", requiredTracks);
+            showInfo(errMsg, true);
+        });
+
+        connection.on("OutOfSongsEvent", () => {
+            showInfo(translations[currentLanguage]["msg_no_songs"], true);
+        });
+
+        // Artık AnswerResult doğrudan sözlük anahtarını (msgKey) alıyor!
+        connection.on("AnswerResult", (isCorrect, msgKey) => {
+            // Sözlükte varsa çevirisini kullan, yoksa direkt bas
+            const finalMsg = translations[currentLanguage][msgKey] || msgKey; 
+            showInfo(finalMsg, !isCorrect);
+            if(!isCorrect) document.querySelectorAll(".option-btn").forEach(b => b.disabled = true);
         });
 
         connection.start().catch(console.error);

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 public class PlayerData {
     public string Name { get; set; }
     public int Score { get; set; }
-    public int Streak { get; set; } // Bu değer ön yüze gidip efekt seviyesini belirleyecek
+    public int Streak { get; set; } 
     public bool IsOnFire => Streak >= 3; 
     public long FastestTimeMs { get; set; } = long.MaxValue;
     public string FastestTrackName { get; set; } = "";
@@ -66,9 +66,11 @@ public class GameHub : Hub {
             await Groups.AddToGroupAsync(Context.ConnectionId, roomCode);
             await Clients.Caller.SendAsync("RoomJoined", roomCode, false); 
             await BroadcastLeaderboard(roomCode);
-            await Clients.Group(roomCode).SendAsync("GameInfo", $"{playerName} odaya katıldı!");
+            // YENİ: Türkçe metin yerine olay yolluyoruz
+            await Clients.Group(roomCode).SendAsync("PlayerJoinedEvent", playerName);
         } else {
-            await Clients.Caller.SendAsync("AnswerResult", false, "Oda bulunamadı veya oyun başladı!");
+            // YENİ: Dil anahtarı (key) yolluyoruz
+            await Clients.Caller.SendAsync("AnswerResult", false, "err_room_not_found");
         }
     }
 
@@ -82,17 +84,17 @@ public class GameHub : Hub {
         if (!_userRooms.TryGetValue(Context.ConnectionId, out var roomCode) || !_rooms.TryGetValue(roomCode, out var room)) return;
         
         int trackCount = await _iTunesService.GetTrackCountAsync(mode, value);
-        
         int requiredTracks = room.Players.Count * 10;
         
         if (trackCount < requiredTracks) {
-            await Clients.Caller.SendAsync("AnswerResult", false, $"⚠️ HATA: '{value}' için depoda {trackCount} şarkı var. (Odada {room.Players.Count} kişiyiz, en az {requiredTracks} şarkı lazım). Lütfen başka bir şey önerin!");
+            // YENİ: Türkçe mesaj yerine verileri yolluyoruz
+            await Clients.Caller.SendAsync("ErrorNotEnoughTracks", value, trackCount, requiredTracks);
             return; 
         }
 
         room.Proposals[Context.ConnectionId] = new GameProposal { Mode = mode, Value = value, Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() };
         
-        await Clients.Group(roomCode).SendAsync("GameInfo", $"✅ {room.Players[Context.ConnectionId].Name} bir kategori önerdi.");
+        await Clients.Group(roomCode).SendAsync("CategorySuggestedEvent", room.Players[Context.ConnectionId].Name);
         await Clients.Group(roomCode).SendAsync("ProposalCountUpdated", room.Proposals.Count, room.Players.Count);
     }
 
@@ -101,7 +103,7 @@ public class GameHub : Hub {
         if (room.HostConnectionId != Context.ConnectionId || room.IsPlaying) return; 
 
         if (room.Proposals.Count == 0) {
-            await Clients.Caller.SendAsync("AnswerResult", false, "Önce kategori önerin!");
+            await Clients.Caller.SendAsync("AnswerResult", false, "err_suggest_first");
             return;
         }
 
@@ -153,7 +155,8 @@ public class GameHub : Hub {
             room.QuestionStartTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(); 
             await Clients.Group(room.RoomCode).SendAsync("NewQuestionReceived", question);
         } else {
-            await Clients.Group(room.RoomCode).SendAsync("GameInfo", "Şarkı bitti! Lobiye dönülüyor.");
+            // YENİ: Şarkı bittiğini belirten olay
+            await Clients.Group(room.RoomCode).SendAsync("OutOfSongsEvent");
             await Task.Delay(3000);
             ResetLobby(room);
         }
@@ -188,8 +191,9 @@ public class GameHub : Hub {
             }
 
             player.Score += points;
-            string speedMsg = isFast ? "(Hızlı Cevap!)" : "";
-            await Clients.Group(roomCode).SendAsync("GameInfo", $"✅ {player.Name} bildi! {speedMsg} (+{points})");
+            
+            // YENİ: String mesaj yerine spesifik değerleri (puan, hız durumu) iletiyoruz
+            await Clients.Group(roomCode).SendAsync("PlayerGuessedEvent", player.Name, isFast, points);
             await BroadcastLeaderboard(roomCode, player.Name, true); 
 
             if (player.Score >= 20) { 
@@ -210,8 +214,9 @@ public class GameHub : Hub {
                 player.Score--; player.Streak = 0; 
             }
 
-            await Clients.Caller.SendAsync("AnswerResult", false, "Yanlış!");
-            await Clients.OthersInGroup(roomCode).SendAsync("GameInfo", $"❌ {player.Name} yanlış bildi!");
+            // YENİ: Hata anahtarı yolluyoruz
+            await Clients.Caller.SendAsync("AnswerResult", false, "err_wrong_answer");
+            await Clients.OthersInGroup(roomCode).SendAsync("PlayerGuessedWrongEvent", player.Name);
             await BroadcastLeaderboard(roomCode, player.Name, false); 
 
             if (room.WrongGuessersThisRound.Count >= room.Players.Count) {
