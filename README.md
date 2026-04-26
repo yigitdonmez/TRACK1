@@ -77,13 +77,13 @@ Aniden kopan bağlantıların oyunu dondurmasını engellemek için `OnDisconnec
 ### Step-by-Step / Adım Adım
 
 **1. Clone the repository / Repoyu indirin:**
-    '''git clone [github.com/yigitdonmez/TRACK1.git](https://github.com/yigitdonmez/TRACK1.git)'''
+    ```git clone [github.com/yigitdonmez/TRACK1.git](https://github.com/yigitdonmez/TRACK1.git)```
 
 **2. Go to project folder / Proje klasörüne girin:**
-    '''cd TRACK1'''
+    ```cd TRACK1```
 
 **3. Restore & Run / Çalıştırın:**
-    '''dotnet run'''
+    ```dotnet run```
 
 **D. Play / Oynayın:**
 Open your browser and go to localhost address seen on your terminal. You can test this by opening two tabs side-by-side to invite your friends. / Tarayıcınızı açın ve terminalinizde görünen localhost adresine gidin. Arkadaşlarınızı davet etmek için yan yana iki sekme açarak test edebilirsiniz.
@@ -91,13 +91,14 @@ Open your browser and go to localhost address seen on your terminal. You can tes
 ---
 
 ## 📅 Roadmap / Yol Haritası
-- [ ] **Spotify Integration:** 30 saniyelik önizlemelerden tam kütüphane erişimine geçiş.
-- [ ] **Global Leaderboard:** Redis kullanarak dünya çapında kalıcı skor tablosu.
-- [ ] **Cloud Deployment (Canlıya Alma):** Projeyi Docker container yapısına geçirip, Azure App Service veya AWS üzerinden global erişime açmak.
-- [ ] **CI/CD Pipeline Kurulumu:** GitHub Actions kullanarak, koda her yeni özellik eklendiğinde sunucunun otomatik güncellenmesini sağlamak.
-- [ ] **Lobby Settings:** Oyuncuların kendi lobi ayarlarını değiştirebileceği alan
-- [ ] **Custom Rooms:** Şifreli ve özel lobi kurma desteği.
-- [ ] **Language Support:** Dil seçenekleri eklenmesi.
+
+- [ ] **Spotify Integration / Spotify Entegrasyonu:** Move beyond 30s previews to full library access. *(30 saniyelik önizlemelerden tam kütüphane erişimine geçiş.)*
+- [ ] **Global Leaderboard / Küresel Skor Tablosu:** Persistent worldwide rankings using Redis. *(Redis kullanarak dünya çapında kalıcı skor tablosu oluşturulması.)*
+- [ ] **Cloud Deployment / Bulut Dağıtımı (Canlıya Alma):** Containerize with Docker and deploy via Azure App Service or AWS. *(Projeyi Docker ile konteynerize edip Azure veya AWS üzerinden global erişime açmak.)*
+- [ ] **CI/CD Pipeline / Sürekli Entegrasyon:** Automated testing and deployment using GitHub Actions. *(GitHub Actions ile koda eklenen her yeni özelliğin sunucuya otomatik olarak güncellenmesi.)*
+- [ ] **Lobby Settings / Gelişmiş Lobi Ayarları:** Dedicated configuration area for hosts to modify game rules (e.g., round time, target score). *(Oda kurucularının tur süresi, hedef puan gibi oyun kurallarını değiştirebileceği ayarlar menüsü.)*
+- [ ] **Custom Rooms / Özel Odalar:** Password-protected private lobby support. *(Şifreli ve dışarıya kapalı özel lobi kurma desteği.)*
+- [ ] **Language Support / Genişletilmiş Dil Desteği:** Expanding i18n support with new language options. *(Mevcut i18n altyapısına yeni dil seçenekleri eklenmesi.)*
 
 ---
 
