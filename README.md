@@ -107,5 +107,5 @@ Bu proje **MIT Lisansı** ile lisanslanmıştır. Detaylar için `LICENSE` dosya
 
 ---
 
-**Developer:** [Salih Yiğit Dönmez](github.com/yigitdonmez)  
+**Developer:** [Salih Yiğit Dönmez](https://github.com/yigitdonmez)  
 **Affiliation:** Istanbul Technical University (ITU) - Computer Engineering
